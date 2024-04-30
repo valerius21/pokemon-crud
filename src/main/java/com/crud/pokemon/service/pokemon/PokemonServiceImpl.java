@@ -39,10 +39,21 @@ public class PokemonServiceImpl implements PokemonService {
     @Transactional(readOnly = true)
     public PokemonResponseDTO findById(Long id) {
 
-        Pokemon data =repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("id:%s not found", id)));
+        Pokemon data = repository.findById(id).orElseThrow(() -> new EntityNotFoundException(String.format("id:%s not found", id)));
         PokemonResponseDTO response = mapper.entityToDto(data);
 
         log.info("Finding a pokemon by his id!");
+
+        return response;
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<PokemonResponseDTO> findByKeyword(String keyword) {
+
+        List<Pokemon> data = repository.findByKeyword(keyword);
+        List<PokemonResponseDTO> response = mapper.listEntityToListDTO(data);
+        log.info("Finding a pokemon by his name/category/abilities");
 
         return response;
     }

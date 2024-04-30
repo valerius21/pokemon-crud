@@ -25,4 +25,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
               .contentType(MediaType.APPLICATION_JSON)
               .body(new ErrorMessage(request, HttpStatus.NOT_FOUND, ex.getMessage()));
     }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorMessage> handleIllegalArgumentException(
+            IllegalArgumentException ex, HttpServletRequest request
+    ) {
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
 }

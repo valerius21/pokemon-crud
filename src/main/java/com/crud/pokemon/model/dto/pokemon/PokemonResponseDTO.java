@@ -13,7 +13,15 @@ public class PokemonResponseDTO {
 
     private Long id;
     private String name;
+    private String category;
     private String abilities;
+
+    private String type;
+    private String weakness;
+
+    private String height;
+    private String weight;
+
 
     public PokemonResponseDTO(PokemonRequestDTO pokemon) {
         this.name = pokemon.getName();

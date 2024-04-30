@@ -28,6 +28,13 @@ public class PokemonController {
         return ResponseEntity.ok(service.findById(id));
     }
 
+    @GetMapping("/findByAll")
+    public ResponseEntity<List<PokemonResponseDTO>> findByKeyword(
+            @RequestParam(required = false) String keyword
+            ) {
+        return ResponseEntity.ok(service.findByKeyword(keyword));
+    }
+
     @PostMapping
     public ResponseEntity<PokemonResponseDTO> save(@RequestBody PokemonRequestDTO pokemon) {
         return ResponseEntity.ok(service.save(pokemon));

@@ -12,6 +12,13 @@ import lombok.Setter;
 public class PokemonRequestDTO {
 
     private String name;
+    private String category;
     private String abilities;
+
+    private String type;
+    private String weakness;
+
+    private String height;
+    private String weight;
 
 }

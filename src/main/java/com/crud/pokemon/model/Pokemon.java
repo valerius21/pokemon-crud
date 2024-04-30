@@ -27,12 +27,23 @@ public class Pokemon implements Serializable {
     private Long id;
 
     private String name;
-
+    private String category;
     private String abilities;
+
+    private String type;
+    private String weakness;
+
+    private String height;
+    private String weight;
 
     public void returner(PokemonRequestDTO request) {
         this.setName(request.getName());
+        this.setCategory(request.getCategory());
         this.setAbilities(request.getAbilities());
+        this.setType(request.getType());
+        this.setWeakness(request.getWeakness());
+        this.setHeight(request.getHeight());
+        this.setWeight(request.getWeight());
     }
 
     @Override
