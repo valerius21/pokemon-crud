@@ -1,5 +1,6 @@
 package com.crud.pokemon.model;
 
+import com.crud.pokemon.model.dto.pokemon.PokemonRequestDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -28,6 +29,11 @@ public class Pokemon implements Serializable {
     private String name;
 
     private String abilities;
+
+    public void returner(PokemonRequestDTO request) {
+        this.setName(request.getName());
+        this.setAbilities(request.getAbilities());
+    }
 
     @Override
     public boolean equals(Object o) {
