@@ -3,6 +3,7 @@ package com.crud.pokemon.controller;
 import com.crud.pokemon.model.dto.pokemon.PokemonRequestDTO;
 import com.crud.pokemon.model.dto.pokemon.PokemonResponseDTO;
 import com.crud.pokemon.service.pokemon.PokemonServiceImpl;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,12 +37,12 @@ public class PokemonController {
     }
 
     @PostMapping
-    public ResponseEntity<PokemonResponseDTO> save(@RequestBody PokemonRequestDTO pokemon) {
+    public ResponseEntity<PokemonResponseDTO> save(@RequestBody @Valid PokemonRequestDTO pokemon) {
         return ResponseEntity.ok(service.save(pokemon));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PokemonResponseDTO> update(@PathVariable Long id, @RequestBody PokemonRequestDTO pokemon) {
+    public ResponseEntity<PokemonResponseDTO> update(@PathVariable Long id, @RequestBody @Valid PokemonRequestDTO pokemon) {
         return ResponseEntity.ok(service.update(id, pokemon));
     }
 
