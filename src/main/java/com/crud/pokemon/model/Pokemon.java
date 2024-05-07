@@ -1,20 +1,18 @@
 package com.crud.pokemon.model;
 
 import com.crud.pokemon.model.dto.pokemon.PokemonRequestDTO;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "pokemons")
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 public class Pokemon implements Serializable {
@@ -36,6 +34,34 @@ public class Pokemon implements Serializable {
     private String height;
     private String weight;
 
+    @JsonIgnore
+    @Column(nullable = false)
+    private boolean active;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(
+            name = "wishlist",
+            joinColumns = @JoinColumn(name = "pokemon_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> users;
+
+    public Pokemon(){
+        setActive(true);
+    }
+
+    public Pokemon(String name, String category, String abilities, String type, String weakness, String height, String weight) {
+        this.name = name;
+        this.category = category;
+        this.abilities = abilities;
+        this.type = type;
+        this.weakness = weakness;
+        this.height = height;
+        this.weight = weight;
+        setActive(true);
+    }
+
     public void returner(PokemonRequestDTO request) {
         this.setName(request.getName());
         this.setCategory(request.getCategory());
@@ -44,6 +70,7 @@ public class Pokemon implements Serializable {
         this.setWeakness(request.getWeakness());
         this.setHeight(request.getHeight());
         this.setWeight(request.getWeight());
+
     }
 
     @Override
