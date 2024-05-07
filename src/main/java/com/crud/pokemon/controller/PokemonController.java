@@ -36,7 +36,7 @@ public class PokemonController {
         return ResponseEntity.ok(service.findByKeyword(keyword));
     }
 
-    @PostMapping
+    @PostMapping("/save")
     public ResponseEntity<PokemonResponseDTO> save(@RequestBody @Valid PokemonRequestDTO pokemon) {
         return ResponseEntity.ok(service.save(pokemon));
     }

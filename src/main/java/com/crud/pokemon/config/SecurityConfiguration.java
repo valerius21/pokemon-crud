@@ -32,7 +32,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/pokemon/{id}", "/api/v1/pokemon/findByAll", "/api/v1/pokemon").hasRole("USER")
-                        .requestMatchers(HttpMethod.POST, "/api/v1/pokemon").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/pokemon/save").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.POST, "/api/v1/pokemon/favorite", "/api/v1/pokemon/unfavorite").hasRole("USER")
                         .requestMatchers(HttpMethod.PUT, "/api/v1/pokemon/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/v1/pokemon/{id}").hasRole("ADMIN")

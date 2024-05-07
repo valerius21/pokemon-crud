@@ -4,7 +4,6 @@ import com.crud.pokemon.exceptions.NullUserException;
 import com.crud.pokemon.exceptions.UserRegisteredException;
 import com.crud.pokemon.model.User;
 import com.crud.pokemon.model.dto.users.*;
-import com.crud.pokemon.model.enums.Role;
 import com.crud.pokemon.repository.UserRepository;
 import com.crud.pokemon.service.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
@@ -45,6 +45,7 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    @Transactional
     public ResponseEntity<Object> login(@RequestBody AuthenticationDTO data) {
         authenticationManager = context.getBean(AuthenticationManager.class);
         var usernamePassword = new UsernamePasswordAuthenticationToken(data.username(), data.password());
@@ -52,7 +53,7 @@ public class UserService implements UserDetailsService {
         var token = authService.generateToken((User) auth.getPrincipal());
         return ResponseEntity.ok(new LoginResponseDTO(auth.getName(), token));
     }
-
+    @Transactional
     public ResponseEntity<Object> register(@RequestBody RegisterDTO data) {
         if (this.userRepository.existsByUsername(data.username())) return ResponseEntity.badRequest().build();
         User newUser = new User(data.name(), data.username(), encoder.encode(data.password()), data.role());
@@ -61,6 +62,7 @@ public class UserService implements UserDetailsService {
         return ResponseEntity.ok().body(new LoginResponseDTO(data.username(), token));
     }
 
+    @Transactional(readOnly = true)
     public List<UserDTO> getAllUsers() {
         List<User> userList = userRepository.findAll();
         return userList.stream()
@@ -74,6 +76,7 @@ public class UserService implements UserDetailsService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     public void updateUser(UpdateDTO data) {
         Optional<User> optionalUser = authService.getAuthUser();
         optionalUser.ifPresent(user -> {
@@ -87,6 +90,7 @@ public class UserService implements UserDetailsService {
         });
     }
 
+    @Transactional
     public void deleteUser(String username) {
         User user = (User) userRepository.findByUsername(username);
         if(user != null) {
