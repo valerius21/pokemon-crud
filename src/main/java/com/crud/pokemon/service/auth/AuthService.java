@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -31,13 +32,17 @@ public class AuthService {
 
     public String generateToken(User data) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
+            Date now = new Date();
 
             String token = JWT.create()
+                    .withClaim(String.valueOf(data.getRole()), "role")
                     .withIssuer("pokemon-crud")
+                    .withIssuedAt(now)
                     .withSubject(data.getUsername())
                     .withExpiresAt(getExpirationDate())
-                    .sign(algorithm);
+                    .sign(algorithm)
+                    .strip();
 
             return token;
         } catch (JWTCreationException ex) {
@@ -47,13 +52,14 @@ public class AuthService {
 
     public String validateToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey);
+            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
 
             return JWT.require(algorithm)
                     .withIssuer("pokemon-crud")
                     .build()
                     .verify(token)
-                    .getSubject();
+                    .getSubject()
+                    .strip();
         } catch (JWTVerificationException ex) {
             return "";
         }
