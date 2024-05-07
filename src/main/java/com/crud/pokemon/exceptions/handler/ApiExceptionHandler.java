@@ -1,7 +1,6 @@
 package com.crud.pokemon.exceptions.handler;
 
-import com.crud.pokemon.exceptions.EntityNotFoundException;
-import com.crud.pokemon.exceptions.ErrorMessage;
+import com.crud.pokemon.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -16,7 +15,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class ApiExceptionHandler {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({
+            EntityNotFoundException.class,
+            NullPokemonException.class,
+            NullPokemonException.class
+
+    })
     public ResponseEntity<ErrorMessage> handleEntityNotFoundException(
             EntityNotFoundException ex, HttpServletRequest request
     ) {
@@ -47,5 +51,39 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Invalid arguments!", result));
+    }
+
+    @ExceptionHandler(UserRegisteredException.class)
+    public ResponseEntity<ErrorMessage> handleUserRegisteredException(
+            UserRegisteredException ex, HttpServletRequest request
+    ) {
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(WishListPokemonException.class)
+    public ResponseEntity<ErrorMessage> handleWishListPokemonException(
+            WishListPokemonException ex, HttpServletRequest request
+    ) {
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(StringIndexOutOfBoundsException.class)
+    private ResponseEntity<ErrorMessage> handleStringIndexOutOfBoundsHandler(
+            StringIndexOutOfBoundsException ex, HttpServletRequest request
+    ) {
+
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 }
