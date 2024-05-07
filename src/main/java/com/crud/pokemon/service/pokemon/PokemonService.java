@@ -13,4 +13,6 @@ public interface PokemonService {
     PokemonResponseDTO save(PokemonRequestDTO pokemon);
     PokemonResponseDTO update(Long id, PokemonRequestDTO pokemon);
     void delete(Long id);
+    void favorite(Long id);
+    void unFavorite(Long id);
 }

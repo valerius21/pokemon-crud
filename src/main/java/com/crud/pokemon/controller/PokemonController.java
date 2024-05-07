@@ -51,4 +51,16 @@ public class PokemonController {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @PostMapping("/favorite/{id}")
+    public ResponseEntity<String> favorite(@PathVariable Long id) {
+        service.favorite(id);
+        return ResponseEntity.ok("Favorited");
+    }
+
+    @PostMapping("/unfavorite/{id}")
+    public ResponseEntity<String> unFavorite(@PathVariable Long id) {
+        service.unFavorite(id);
+        return ResponseEntity.ok("Unfavorited");
+    }
 }

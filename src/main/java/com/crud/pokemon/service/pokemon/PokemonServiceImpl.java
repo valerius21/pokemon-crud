@@ -1,25 +1,32 @@
 package com.crud.pokemon.service.pokemon;
 
 import com.crud.pokemon.exceptions.EntityNotFoundException;
+import com.crud.pokemon.exceptions.NullPokemonException;
+import com.crud.pokemon.exceptions.WishListPokemonException;
 import com.crud.pokemon.mapper.PokemonMapper;
 import com.crud.pokemon.model.Pokemon;
+import com.crud.pokemon.model.User;
 import com.crud.pokemon.model.dto.pokemon.PokemonRequestDTO;
 import com.crud.pokemon.model.dto.pokemon.PokemonResponseDTO;
 import com.crud.pokemon.repository.PokemonRepository;
+import com.crud.pokemon.service.auth.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class PokemonServiceImpl implements PokemonService {
 
+    private final AuthService authService;
     private final PokemonRepository repository;
     private final PokemonMapper mapper;
 
-    public PokemonServiceImpl(PokemonRepository repository, PokemonMapper mapper) {
+    public PokemonServiceImpl(AuthService authService, PokemonRepository repository, PokemonMapper mapper) {
+        this.authService = authService;
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -86,5 +93,53 @@ public class PokemonServiceImpl implements PokemonService {
         this.findById(id);
         this.repository.deleteById(id);
         log.info("Deleting a pokemon!");
+    }
+
+    @Override
+    public void favorite(Long id) {
+        Optional<User> optionalUser = authService.getAuthUser();
+        optionalUser.ifPresent(
+                user -> {
+                    Optional<Pokemon> optionalPokemon = repository.findById(id);
+                    if (optionalPokemon.isPresent() && optionalPokemon.get().isActive()) {
+                        var pokemon = optionalPokemon.get();
+                        var wishList = user.getWishlist();
+                        var userList = pokemon.getUsers();
+                        if (!wishList.contains(pokemon)) {
+                            wishList.add(pokemon);
+                            userList.add(user);
+                            repository.save(pokemon);
+                        } else {
+                            throw new WishListPokemonException();
+                        }
+                    } else {
+                        throw new NullPokemonException();
+                    }
+                }
+        );
+    }
+
+    @Override
+    public void unFavorite(Long id) {
+        Optional<User> optionalUser = authService.getAuthUser();
+        optionalUser.ifPresent(
+                user -> {
+                    Optional<Pokemon> optionalPokemon = repository.findById(id);
+                    if (optionalPokemon.isPresent() && optionalPokemon.get().isActive()) {
+                        var pokemon = optionalPokemon.get();
+                        var wishlist = user.getWishlist();
+                        var userList = pokemon.getUsers();
+                        if (wishlist.contains(pokemon)) {
+                            wishlist.remove(pokemon);
+                            userList.remove(user);
+                            repository.save(pokemon);
+                        } else {
+                            throw new WishListPokemonException();
+                        }
+                    } else {
+                        throw new NullPokemonException();
+                    }
+                }
+        );
     }
 }
