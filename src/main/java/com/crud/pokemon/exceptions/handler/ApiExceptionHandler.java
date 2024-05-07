@@ -18,7 +18,7 @@ public class ApiExceptionHandler {
     @ExceptionHandler({
             EntityNotFoundException.class,
             NullPokemonException.class,
-            NullPokemonException.class
+            NullUserException.class
 
     })
     public ResponseEntity<ErrorMessage> handleEntityNotFoundException(

@@ -41,7 +41,7 @@ public class AuthService {
 
             return token;
         } catch (JWTCreationException ex) {
-            throw new RuntimeException();
+            throw new RuntimeException("Error while generating token. Try again later!", ex);
         }
     }
 
