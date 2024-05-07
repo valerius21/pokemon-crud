@@ -3,5 +3,5 @@
 - [ ] Add Swagger.
 - [ ] Add Refresh token.
 - [x] Add Flyway.
-- [ ] Add Docker.
+- [x] Add Docker.
 - [ ] Add Pagination.
