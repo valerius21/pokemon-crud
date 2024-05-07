@@ -1,0 +1,68 @@
+version: '3.9'
+
+services:
+  template:
+    container_name: api
+    image: pokemon
+    shm_size: 128mb
+    environment:
+      SPRING.DATASOURCE.URL: jdbc:postgresql://db:5432/pokemon
+      SPRING.DATASOURCE.USERNAME: postgres
+      SPRING.DATASOURCE.PASSWORD: admin123
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - backend-pokemons
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres
+    image: postgres:latest
+    restart: always
+    shm_size: 128mb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_USER: postgres
+      POSTGRES_DB: pokemon
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - backend-pokemons
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    container_name: pgadmin4
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test.test@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "3333:80"
+
+
+networks:
+  backend-pokemons:
+    name: pokemon_network
+    driver: bridge
+
+volumes:
+  postgres_data: {}
