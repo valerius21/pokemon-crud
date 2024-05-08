@@ -24,14 +24,24 @@ public class Pokemon implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
     private String category;
+
+
+    @Column(nullable = false)
     private String abilities;
 
+    @Column(nullable = false)
     private String type;
+    @Column
     private String weakness;
 
+    @Column
     private String height;
+    @Column
     private String weight;
 
     @JsonIgnore
