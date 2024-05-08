@@ -7,6 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.crud.pokemon.exceptions.NullUserException;
 import com.crud.pokemon.model.User;
 import com.crud.pokemon.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,10 +17,12 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Base64;
 import java.util.Date;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
 
     private final UserRepository userRepository;
@@ -26,24 +30,27 @@ public class AuthService {
     @Value("${api.security.token.secret}")
     private String secretKey;
 
-    public AuthService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private Algorithm algorithm;
+    private Date now;
+
+
+    @PostConstruct
+    protected void init() {
+        secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
+        algorithm = Algorithm.HMAC256(secretKey.getBytes());
+        now = new Date();
     }
 
     public String generateToken(User data) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
-            Date now = new Date();
-
             String token = JWT.create()
-                    .withClaim(String.valueOf(data.getRole()), "role")
+                    .withClaim("role", String.valueOf(data.getRole()))
                     .withIssuer("pokemon-crud")
-                    .withIssuedAt(now)
                     .withSubject(data.getUsername())
+                    .withIssuedAt(now)
                     .withExpiresAt(getExpirationDate())
                     .sign(algorithm)
                     .strip();
-
             return token;
         } catch (JWTCreationException ex) {
             throw new RuntimeException("Error while generating token. Try again later!", ex);
@@ -52,8 +59,7 @@ public class AuthService {
 
     public String validateToken(String token) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secretKey.getBytes());
-
+            algorithm = Algorithm.HMAC256(secretKey.getBytes());
             return JWT.require(algorithm)
                     .withIssuer("pokemon-crud")
                     .build()
@@ -65,10 +71,6 @@ public class AuthService {
         }
     }
 
-    private Instant getExpirationDate() {
-        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
-    }
-
     public Optional<User> getAuthUser() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
@@ -77,5 +79,9 @@ public class AuthService {
             return userRepository.loadByUsername(username);
         } else
             throw new NullUserException();
+    }
+
+    private Instant getExpirationDate() {
+        return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }
 }
