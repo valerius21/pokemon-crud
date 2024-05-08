@@ -49,7 +49,7 @@ public class PokemonController {
             tags = {"Pokemons"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content (schema = @Schema(implementation = PokemonResponseDTO.class))),
+                            content = @Content(schema = @Schema(implementation = PokemonResponseDTO.class))),
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
@@ -76,7 +76,7 @@ public class PokemonController {
             })
     public ResponseEntity<List<PokemonResponseDTO>> findByKeyword(
             @RequestParam(required = false) String keyword
-            ) {
+    ) {
         return ResponseEntity.ok(service.findByKeyword(keyword));
     }
 
@@ -86,7 +86,7 @@ public class PokemonController {
             tags = {"Pokemons"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content (schema = @Schema(implementation = PokemonResponseDTO.class))),
+                            content = @Content(schema = @Schema(implementation = PokemonResponseDTO.class))),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
@@ -101,7 +101,7 @@ public class PokemonController {
             tags = {"Pokemons"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content (schema = @Schema(implementation = PokemonResponseDTO.class))),
+                            content = @Content(schema = @Schema(implementation = PokemonResponseDTO.class))),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
@@ -122,7 +122,7 @@ public class PokemonController {
                     @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<Object> delete(@PathVariable Long id) {
         this.service.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -133,7 +133,7 @@ public class PokemonController {
             tags = {"Pokemons"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content (schema = @Schema(implementation = PokemonResponseDTO.class))),
+                            content = @Content(schema = @Schema(implementation = PokemonResponseDTO.class))),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
@@ -150,7 +150,7 @@ public class PokemonController {
             tags = {"Pokemons"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
-                            content = @Content (schema = @Schema(implementation = PokemonResponseDTO.class))),
+                            content = @Content(schema = @Schema(implementation = PokemonResponseDTO.class))),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
                     @ApiResponse(description = "Forbidden", responseCode = "403", content = @Content),
                     @ApiResponse(description = "Not found", responseCode = "404", content = @Content),

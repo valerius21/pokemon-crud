@@ -90,7 +90,6 @@ public class PokemonServiceImpl implements PokemonService {
     @Override
     @Transactional
     public void delete(Long id) {
-        this.findById(id);
         this.repository.deleteById(id);
         log.info("Deleting a pokemon!");
     }

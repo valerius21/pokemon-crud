@@ -20,11 +20,14 @@ import java.io.IOException;
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private AuthService authService;
+    private final AuthService authService;
+
+    public SecurityFilter(UserRepository userRepository, AuthService authService) {
+        this.userRepository = userRepository;
+        this.authService = authService;
+    }
 
     @Override
     protected void doFilterInternal(

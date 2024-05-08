@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class ApiExceptionHandler {
+    private static final String ERROR_PREFIX = "API Error - ";
 
     @ExceptionHandler({
             EntityNotFoundException.class,
@@ -24,7 +25,7 @@ public class ApiExceptionHandler {
     public final ResponseEntity<ErrorMessage> handleEntityNotFoundException(
             EntityNotFoundException ex, HttpServletRequest request
     ) {
-      log.error("API Error - ", ex);
+      log.error(ERROR_PREFIX, ex);
       return ResponseEntity
               .status(HttpStatus.NOT_FOUND)
               .contentType(MediaType.APPLICATION_JSON)
@@ -35,7 +36,7 @@ public class ApiExceptionHandler {
     public final ResponseEntity<ErrorMessage> handleIllegalArgumentException(
             IllegalArgumentException ex, HttpServletRequest request
     ) {
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -46,7 +47,7 @@ public class ApiExceptionHandler {
     public final ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex, HttpServletRequest request, BindingResult result
     ) {
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.UNPROCESSABLE_ENTITY)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -57,7 +58,7 @@ public class ApiExceptionHandler {
     public final ResponseEntity<ErrorMessage> handleUserRegisteredException(
             UserRegisteredException ex, HttpServletRequest request
     ) {
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -68,7 +69,7 @@ public class ApiExceptionHandler {
     public final ResponseEntity<ErrorMessage> handleWishListPokemonException(
             WishListPokemonException ex, HttpServletRequest request
     ) {
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -80,7 +81,7 @@ public class ApiExceptionHandler {
             StringIndexOutOfBoundsException ex, HttpServletRequest request
     ) {
 
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -92,7 +93,7 @@ public class ApiExceptionHandler {
             RuntimeException ex, HttpServletRequest request
     ) {
 
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -104,7 +105,7 @@ public class ApiExceptionHandler {
             WrongMatchPasswordUsernameException ex, HttpServletRequest request
     ) {
 
-        log.error("API Error - ", ex);
+        log.error(ERROR_PREFIX, ex);
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .contentType(MediaType.APPLICATION_JSON)

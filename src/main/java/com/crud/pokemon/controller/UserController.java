@@ -21,8 +21,11 @@ import java.util.List;
 @Tag(name = "Users", description = "Endpoint for managing Users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     @Operation(summary = "Find all Users!", description = "Find all Users!",
@@ -88,7 +91,7 @@ public class UserController {
                     @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             })
-    public ResponseEntity<?> deleteUser(@PathVariable String username, HttpServletRequest request) {
+    public ResponseEntity<Object> deleteUser(@PathVariable String username, HttpServletRequest request) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
