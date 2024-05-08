@@ -21,7 +21,7 @@ public class ApiExceptionHandler {
             NullUserException.class
 
     })
-    public ResponseEntity<ErrorMessage> handleEntityNotFoundException(
+    public final ResponseEntity<ErrorMessage> handleEntityNotFoundException(
             EntityNotFoundException ex, HttpServletRequest request
     ) {
       log.error("API Error - ", ex);
@@ -32,7 +32,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ErrorMessage> handleIllegalArgumentException(
+    public final ResponseEntity<ErrorMessage> handleIllegalArgumentException(
             IllegalArgumentException ex, HttpServletRequest request
     ) {
         log.error("API Error - ", ex);
@@ -43,7 +43,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(
+    public final ResponseEntity<ErrorMessage> handleMethodArgumentNotValidException(
             MethodArgumentNotValidException ex, HttpServletRequest request, BindingResult result
     ) {
         log.error("API Error - ", ex);
@@ -54,7 +54,7 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(UserRegisteredException.class)
-    public ResponseEntity<ErrorMessage> handleUserRegisteredException(
+    public final ResponseEntity<ErrorMessage> handleUserRegisteredException(
             UserRegisteredException ex, HttpServletRequest request
     ) {
         log.error("API Error - ", ex);
@@ -65,18 +65,18 @@ public class ApiExceptionHandler {
     }
 
     @ExceptionHandler(WishListPokemonException.class)
-    public ResponseEntity<ErrorMessage> handleWishListPokemonException(
+    public final ResponseEntity<ErrorMessage> handleWishListPokemonException(
             WishListPokemonException ex, HttpServletRequest request
     ) {
         log.error("API Error - ", ex);
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()));
     }
 
     @ExceptionHandler(StringIndexOutOfBoundsException.class)
-    private ResponseEntity<ErrorMessage> handleStringIndexOutOfBoundsHandler(
+    public final ResponseEntity<ErrorMessage> handleStringIndexOutOfBoundsHandler(
             StringIndexOutOfBoundsException ex, HttpServletRequest request
     ) {
 
@@ -85,5 +85,29 @@ public class ApiExceptionHandler {
                 .status(HttpStatus.BAD_REQUEST)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public final ResponseEntity<ErrorMessage> handleRuntimeException(
+            RuntimeException ex, HttpServletRequest request
+    ) {
+
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.INTERNAL_SERVER_ERROR, "Try again later!!"));
+    }
+
+    @ExceptionHandler(WrongMatchPasswordUsernameException.class)
+    public final ResponseEntity<ErrorMessage> handleWrongMatchPasswordException(
+            WrongMatchPasswordUsernameException ex, HttpServletRequest request
+    ) {
+
+        log.error("API Error - ", ex);
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(new ErrorMessage(request, HttpStatus.UNAUTHORIZED, ex.getMessage()));
     }
 }

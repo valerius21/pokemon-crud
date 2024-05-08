@@ -3,6 +3,7 @@ package com.crud.pokemon.controller;
 import com.crud.pokemon.model.dto.users.UpdateDTO;
 import com.crud.pokemon.model.dto.users.UserDTO;
 import com.crud.pokemon.service.user.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,19 +18,25 @@ public class UserController {
     private UserService userService;
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<UserDTO>> getAllUsers(HttpServletRequest request) {
         var registrationDTOList = userService.getAllUsers();
         return ResponseEntity.ok(registrationDTOList);
     }
 
-    @PutMapping
-    public ResponseEntity<String> updateUser(@RequestBody UpdateDTO updateDTO) {
-        userService.updateUser(updateDTO);
-        return ResponseEntity.ok("Updated!");
+    @GetMapping("/{username}")
+    public ResponseEntity<UserDTO> findById(@PathVariable String username, HttpServletRequest request) {
+        UserDTO user = userService.findByUsername(username);
+        return ResponseEntity.ok(user);
     }
 
-    @DeleteMapping("{username}")
-    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+    @PutMapping
+    public ResponseEntity<UpdateDTO> updateUser(@RequestBody UpdateDTO data, HttpServletRequest request) {
+        userService.updateUser(data);
+        return ResponseEntity.ok(new UpdateDTO(data.name(), data.username(), data.password()));
+    }
+
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username, HttpServletRequest request) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
